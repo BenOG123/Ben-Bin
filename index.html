@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben Bin 2.0 - Share Your Ben Moments</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #f43f5e;
+            --success: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .upload-section {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 6rem;
+            height: fit-content;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 1rem 0;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .feed {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .post {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .like-btn.liked {
+            color: var(--accent);
+        }
+
+        .post-content {
+            padding: 0 1rem 1rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .trending-section {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .trending-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .trending-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        @keyframes heart-burst {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-animation {
+            animation: heart-burst 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo">BenBin</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Explore</a>
+                <a href="#" class="nav-link">Trending</a>
+                <a href="#" class="nav-link">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <aside>
+            <div class="upload-section">
+                <h2>Share Your Ben</h2>
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">📸</div>
+                    <p>Drag and drop your photo here</p>
+                    <p>or</p>
+                    <input type="file" id="fileInput" hidden accept="image/*">
+                    <button class="btn" onclick="document.getElementById('fileInput').click()">
+                        Choose File
+                    </button>
+                </div>
+            </div>
+
+            <div class="trending-section">
+                <h3 class="trending-title">Trending Tags</h3>
+                <div class="trending-tags">
+                    <span class="tag">#BenSpotted</span>
+                    <span class="tag">#BenInTheWild</span>
+                    <span class="tag">#BenMoments</span>
+                    <span class="tag">#BenLife</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="feed">
+            <article class="post">
+                <div class="post-header">
+                    <img src="/api/placeholder/40/40" alt="User avatar" class="user-avatar">
+                    <div>
+                        <h3>BenEnthusiast</h3>
+                        <small style="color: var(--text-secondary)">2 hours ago</small>
+                    </div>
+                </div>
+                <img src="/api/placeholder/800/500" alt="Ben photo" class="post-image">
+                <div class="post-content">
+                    <p>Found Ben enjoying his morning coffee! ☕️</p>
+                    <div class="tags">
+                        <span class="tag">#MorningBen</span>
+                        <span class="tag">#CoffeeBen</span>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn like-btn" onclick="toggleLike(this)">
+                        ❤️ <span class="like-count">128</span>
+                    </button>
+                    <button class="action-btn">
+                        💬 Comments (24)
+                    </button>
+                    <button class="action-btn">
+                        ↗️ Share
+                    </button>
+                </div>
+            </article>
+
+            <article class="post">
+                <div class="post-header">
+                    <img src="/api/placeholder/40/40" alt="User avatar" class="user-avatar">
+                    <div>
+                        <h3>BenSpotter</h3>
+                        <small style="color: var(--text-secondary)">5 hours ago</small>
+                    </div>
+                </div>
+                <img src="/api/placeholder/800/500" alt="Ben photo" class="post-image">
+                <div class="post-content">
+                    <p>Best Ben sighting of the day! 🌟</p>
+                    <div class="tags">
+                        <span class="tag">#BenInAction</span>
+                        <span class="tag">#PerfectTiming</span>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn like-btn" onclick="toggleLike(this)">
+                        ❤️ <span class="like-count">256</span>
+                    </button>
+                    <button class="action-btn">
+                        💬 Comments (42)
+                    </button>
+                    <button class="action-btn">
+                        ↗️ Share
+                    </button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        // Handle file uploads
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            [...files].forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        createNewPost(e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function createNewPost(imageUrl) {
+            const post = document.createElement('article');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <img src="/api/placeholder/40/40" alt="User avatar" class="user-avatar">
+                    <div>
+                        <h3>You</h3>
+                        <small style="color: var(--text-secondary)">Just now</small>
+                    </div>
+                </div>
+                <img src="${imageUrl}" alt="Uploaded Ben photo" class="post-image">
+                <div class="post-content">
+                    <p>New Ben spotted! 📸</p>
+                    <div class="tags">
+                        <span class="tag">#NewBen</span>
+                        <span class="tag">#BenBin</span>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn like-btn" onclick="toggleLike(this)">
+                        ❤️ <span class="like-count">0</span>
+                    </button>
+                    <button class="action-btn">
+                        💬 Comments (0)
+                    </button>
+                    <button class="action-btn">
+                        ↗️ Share
+                    </button>
+                </div>
+            `;
+            document.querySelector('.feed').insertBefore(post, document.querySelector('.feed').firstChild);
+        }
+
+        function toggleLike(button) {
+            const likeCount = button.querySelector('.like-count');
+            const currentLikes = parseInt(likeCount.textContent);
+            
+            if (button.classList.contains('liked')) {
+                button.classList.remove('liked');
+                likeCount.textContent = currentLikes - 1;
+            } else {
+                button.classList.add('liked', 'heart-animation');
+                likeCount.textContent = currentLikes + 1;
+                setTimeout(() => button.classList.remove('heart-animation'), 400);
+            }
+        }
+    </script>
+</body>
+</html>
